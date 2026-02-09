@@ -1,5 +1,4 @@
 def add_task(tasks, title):
-    # Manejo básico por si title viene raro
     try:
         if title is None or str(title).strip() == "":
             print(" Error: El título no puede estar vacío.")
@@ -15,6 +14,18 @@ def add_task(tasks, title):
 
     except Exception as e:
         print(f" Error inesperado al agregar tarea: {e}")
+    for task in tasks:
+        if task["title"].lower() == title.lower():
+            print("Error: ya existe una tarea con ese título")
+            return
+
+    task = {
+        "id": len(tasks) + 1,
+        "title": title,
+        "completed": False
+    }
+    tasks.append(task)
+    print("Tarea agregada")
 
 
 def list_tasks(tasks):
@@ -42,7 +53,6 @@ def _parse_task_id(task_id):
 
 
 def complete_task(tasks, task_id):
-    # Debe marcar la tarea como completada sin crashear si el ID está mal
     try:
         tid = _parse_task_id(task_id)
 
@@ -55,7 +65,6 @@ def complete_task(tasks, task_id):
                     print(" Tarea completada")
                 return
 
-        # si no encontró el id
         print(f" Error: No existe una tarea con id {tid}")
 
     except ValueError as e:
@@ -67,7 +76,6 @@ def complete_task(tasks, task_id):
 
 
 def delete_task(tasks, task_id):
-    # Debe eliminar la tarea sin crashear si el ID está mal
     try:
         tid = _parse_task_id(task_id)
 
@@ -85,3 +93,30 @@ def delete_task(tasks, task_id):
         print(" Error: Una tarea no tiene el formato esperado (faltan claves).")
     except Exception as e:
         print(f" Error inesperado al eliminar tarea: {e}")
+    for task in tasks:
+        if task["id"] == task_id:
+            task["completed"] = True
+            print("Tarea completada")
+            return
+
+    print("Error: ID no encontrado")
+
+
+def delete_task(tasks, task_id):
+    try:
+        task_id = int(task_id)
+    except:
+        print("Error: ID inválido")
+        return
+
+    for task in tasks:
+        if task["id"] == task_id:
+            tasks.remove(task)
+
+            for i, t in enumerate(tasks):
+                t["id"] = i + 1
+
+            print("Tarea eliminada")
+            return
+
+    print("Error: ID no encontrado")
