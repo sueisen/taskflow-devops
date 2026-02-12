@@ -25,7 +25,7 @@ def add_task(tasks, title):
         "completed": False
     }
     tasks.append(task)
-    print("Tarea agregada")
+    print(" Tarea agregada")
 
 
 def list_tasks(tasks):
@@ -52,7 +52,29 @@ def _parse_task_id(task_id):
         raise ValueError("El ID debe ser un número entero. Ej: 1, 2, 3")
 
 
+#  FUNCIÓN DE VALIDACIÓN DE ID
+def validar_task_id(task_id):
+    """
+    Valida que el task_id:
+    - Sea un número
+    - No sea negativo
+    - No rompa el programa si es inválido
+    """
+    try:
+        task_id = int(task_id)
+    except ValueError:
+        print(" Error: El ID debe ser un número (no letras ni símbolos).")
+        return None
+
+    if task_id < 0:
+        print(" Error: El ID no puede ser negativo.")
+        return None
+
+    return task_id
+
+
 def complete_task(tasks, task_id):
+HEAD
     try:
         tid = _parse_task_id(task_id)
 
@@ -93,13 +115,41 @@ def delete_task(tasks, task_id):
         print(" Error: Una tarea no tiene el formato esperado (faltan claves).")
     except Exception as e:
         print(f" Error inesperado al eliminar tarea: {e}")
+    HEAD
+    task_id = validar_task_id(task_id)
+    if task_id is None:
+        return  # No se rompe el menú
+ upstream/main
     for task in tasks:
         if task["id"] == task_id:
             task["completed"] = True
-            print("Tarea completada")
+            print(" Tarea marcada como completada")
             return
 
-    print("Error: ID no encontrado")
+    print(" Error: No se encontró una tarea con ese ID")
+
+
+def delete_task(tasks, task_id):
+    task_id = validar_task_id(task_id)
+    if task_id is None:
+        return  # No se rompe el menú
+    try:
+        task_id = int(task_id)
+    except:
+        print("Error: ID inválido")
+        return
+
+    for task in tasks:
+        if task["id"] == task_id:
+            if task["completed"]:
+                print("La tarea ya estaba completada")
+                return
+            task["completed"] = True
+            print("✔ Tarea completada")
+            return
+
+    print("Error: tarea no encontrada")
+
 
 
 def delete_task(tasks, task_id):
@@ -111,6 +161,11 @@ def delete_task(tasks, task_id):
 
     for task in tasks:
         if task["id"] == task_id:
+            confirm = input(f"¿Seguro que deseas eliminar '{task['title']}'? (s/n): ")
+
+            if confirm.lower() != "s":
+                print("Eliminación cancelada")
+                return
             tasks.remove(task)
 
             for i, t in enumerate(tasks):
@@ -120,3 +175,6 @@ def delete_task(tasks, task_id):
             return
 
     print("Error: ID no encontrado")
+
+    print("Error: ID no encontrado")
+upstream/main
